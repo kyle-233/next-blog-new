@@ -4,7 +4,7 @@ import matter from 'gray-matter'
 import { join } from 'path'
 import readingTime from 'reading-time'
 
-const postsDirectory = join(process.cwd(), 'content', 'blog')
+const postsDirectory = join(process.cwd(), 'content', 'blogs')
 
 export const getPostSlugs = () => {
 	return readdirSync(postsDirectory)
@@ -12,7 +12,9 @@ export const getPostSlugs = () => {
 
 export const getPostBySlug = (slug: string): PostProps => {
 	const realSlug = slug.replace(/\.mdx$/, '')
-	const fullPath = join(postsDirectory, `${realSlug}.mdx`)
+
+	const fullPath = join(postsDirectory, `${realSlug}/index.mdx`)
+
 	const fileContents = readFileSync(fullPath)
 	const { data, content } = matter(fileContents)
 	const readTime = readingTime(content)

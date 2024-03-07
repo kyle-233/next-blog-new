@@ -7,9 +7,18 @@ import remarkMath from 'remark-math'
 import { MdxImage } from './mdx-image'
 import { cn } from '@/lib/utils'
 import remarkToc from 'remark-toc'
+import '@/styles/mdx.css'
+import { Counter } from '@/content/blogs/the-two-reacts/components'
 
-export const Mdx = ({ content = '' }) => {
+interface MdxProps {
+	content: string
+	postComponents: Record<string, React.ReactNode> | undefined
+}
+
+export const Mdx = async ({ content = '', postComponents = {} }: MdxProps) => {
 	const components = {
+		...postComponents,
+		Counter: Counter,
 		Image: MdxImage,
 		table: ({
 			className,
@@ -52,14 +61,23 @@ export const Mdx = ({ content = '' }) => {
 				{...props}
 			/>
 		),
+		button: ({
+			className,
+			...props
+		}: React.HTMLAttributes<HTMLButtonElement>) => (
+			<button className={cn('', className)} {...props} />
+		),
 	}
+
 	const options = {
-		parseFrontmatter: true,
+		useDynamicImport: true,
 		mdxOptions: {
+			parseFrontmatter: true,
+			useDynamicImport: true,
 			remarkPlugins: [
-				[remarkToc, { maxDepth: 4 }],
+				// remarkGfm,
+				// [remarkToc, { maxDepth: 4 }],
 				remarkMath,
-				remarkGfm,
 			],
 			rehypePlugins: [
 				rehypeKatex,
@@ -69,8 +87,9 @@ export const Mdx = ({ content = '' }) => {
 						theme: 'material-theme-palenight',
 					},
 				],
-				rehypeAutolinkHeadings,
+				// rehypeAutolinkHeadings,
 			],
+			// format: 'mdx',
 		},
 	}
 	return (

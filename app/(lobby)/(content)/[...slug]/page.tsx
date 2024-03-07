@@ -2,9 +2,22 @@ import { Mdx } from '@/components/mdx/mdx-component'
 import { fontSans } from '@/lib/fonts'
 import { getAllPosts, getPostBySlug } from '@/lib/reader'
 import { cn, formatDate } from '@/lib/utils'
-import '@/styles/mdx.css'
-const SlugPage = ({ params }: { params: { slug: string[] } }) => {
+const SlugPage = async ({ params }: { params: { slug: string[] } }) => {
 	const post = getPostBySlug(params.slug.join(''))
+	let postComponents: any = {}
+
+	try {
+		postComponents = await import(
+			'../../../../content/blogs/' +
+				params.slug.join('') +
+				'/components.ts'
+		)
+	} catch (e: any) {
+		if (!e || e.code !== 'MODULE_NOT_FOUND') {
+			throw e
+		}
+	}
+
 	return (
 		<article>
 			<h1
@@ -19,7 +32,7 @@ const SlugPage = ({ params }: { params: { slug: string[] } }) => {
 				{formatDate(post.date)}
 			</p>
 			<div className="markdown mt-10">
-				<Mdx content={post.content} />
+				<Mdx content={post.content} postComponents={postComponents} />
 			</div>
 		</article>
 	)
