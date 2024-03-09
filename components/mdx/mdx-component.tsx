@@ -75,7 +75,7 @@ export const Mdx = async ({ content = '', postComponents = {} }: MdxProps) => {
 			parseFrontmatter: true,
 			useDynamicImport: true,
 			remarkPlugins: [
-				// remarkGfm,
+				remarkGfm,
 				// [remarkToc, { maxDepth: 4 }],
 				remarkMath,
 			],
@@ -89,7 +89,6 @@ export const Mdx = async ({ content = '', postComponents = {} }: MdxProps) => {
 				],
 				// rehypeAutolinkHeadings,
 			],
-			// format: 'mdx',
 		},
 	}
 	return (
