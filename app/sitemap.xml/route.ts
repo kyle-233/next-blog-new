@@ -1,11 +1,10 @@
-import { generateFeed } from '@/lib/feed'
 import { getAllPosts } from '@/lib/reader'
-import { metadata } from '../layout'
+import { generateSiteMap } from '@/lib/sitemap'
 
 export async function GET() {
 	const posts = await getAllPosts()
-	const feed = generateFeed(posts, metadata)
-	return new Response(feed.rss2(), {
+	const feed = generateSiteMap(posts)
+	return new Response(feed, {
 		headers: { 'Content-Type': 'application/xhtml+xml' },
 	})
 }

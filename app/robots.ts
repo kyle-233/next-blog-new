@@ -9,6 +9,7 @@ export default function robots(): MetadataRoute.Robots {
 		sitemap: [
 			'https://overreacted-kyle.vercel.app/atom.xml',
 			'https://overreacted-kyle.vercel.app/rss.xml',
+			'https://overreacted-kyle.vercel.app/sitemap.xml',
 		],
 	}
 }
