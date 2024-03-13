@@ -7,8 +7,9 @@ const links = {
 }
 
 export const siteConfig = {
+	title: 'overreacted - A blog by Kyle Lou',
 	name: 'overreacted',
-	description: 'A blog by Kyle Lou',
+	description: 'A personal blog by Kyle Lou',
 	url: '',
 	links,
 }

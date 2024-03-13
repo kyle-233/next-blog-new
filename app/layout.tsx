@@ -26,6 +26,14 @@ export const metadata: Metadata = {
 		description: siteConfig.description,
 		siteName: siteConfig.name,
 	},
+	alternates: {
+		types: {
+			'application/atom+xml':
+				'https://overreacted-kyle.vercel.app/atom.xml',
+			'application/rss+xml':
+				'https://overreacted-kyle.vercel.app/rss.xml',
+		},
+	},
 	// twitter: {
 	// 	card: 'summary_large_image',
 	// 	title: siteConfig.name,
