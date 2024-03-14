@@ -3,6 +3,7 @@ import '@/styles/globals.css'
 import { cn } from '@/lib/utils'
 import { fontMono } from '@/lib/fonts'
 import { siteConfig } from '@/config/site'
+import { Analytics } from '@/components/analytics'
 
 export const metadata: Metadata = {
 	title: {
@@ -60,6 +61,7 @@ export default function RootLayout({
 				)}
 			>
 				{children}
+				<Analytics />
 			</body>
 		</html>
 	)
