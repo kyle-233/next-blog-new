@@ -1,0 +1,66 @@
+---
+title: 'Next.js 项目基础配置'
+date: '2024-7-30'
+description: 'Setting up a Next.js project with ESLint, Prettier and husky.'
+authors:
+  - Kyle
+---
+
+## Prettier
+`Prettier` 用于代码格式化
+在`Next.js`项目中使用`Prettier`配合`Eslint`使用。
+
+```bash
+# install
+npm install --save-dev --save-exact prettier eslint-config-prettier
+# add `prettier` on `.eslintrc.json`
+echo '{"extends": ["next/core-web-vitals", "prettier"]}' > .eslintrc.json
+# add rules on `.prettierrc.json`
+echo '{}' > .prettierrc.json
+```
+
+And then add some local config at `.vscode/settings.json` file
+
+```js
+{
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[typescript]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveMode": "file",
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}
+```
+
+## commitlint
+使用`commitlint`对`commit message`根据`@commitlint/config-conventional`提供的规则进行校验
+
+```bash
+# install
+npm install --save-dev --save-exact @commitlint/config-conventional @commitlint/cli
+# configure commitlint to use conventional config
+echo '{ "extends": ["@commitlint/config-conventional"] }' > .commitlintrc.json
+# add npm script
+npm pkg set scripts.commitlint="commitlint --edit --config .commitlintrc.json -e -V"
+```
+
+## husky
+`husky` 提供多种`git hooks`，让 `commitlint` 校验在对应的节点自动触发。
+
+```bash
+# install
+npm install --save-dev --save-exact husky
+# initial
+npx husky init
+
+# Add commit message linting to commit-msg hook
+echo "npx --no-install commitlint --edit \$1" > .husky/commit-msg
+```
+
+## References
+- [Prettier Documentation](https://prettier.io/docs/en/install)
+- [Next.js eslint](https://nextjs.org/docs/app/api-reference/next-config-js/eslint)
+- [Commitlint Documentation](https://commitlint.js.org/)
+- [Husky Documentation](https://typicode.github.io/husky/)
