@@ -1,0 +1,48 @@
+---
+title: 'How to edit svg'
+date: '2024-8-13'
+description: 'To edit the raw of svg in my special way'
+authors:
+  - Kyle
+---
+
+## Previous
+
+In Next.js, you can import a svg file and show it by using an `<Image />` tag without other package
+
+``` tsx
+import exampleSvg from 'example.svg'
+<Image src={exampleSvg} {...props} />
+```
+
+## Component
+
+First, you install `@svgr/webpack` package
+
+``` base
+npm install @svgr/webpack
+```
+
+And then, you can import a svg and use it as a component
+
+``` tsx
+import ExampleSvg from 'example.svg'
+<ExampleSvg />
+```
+
+## Now
+
+While import the svg file, you can execute it as a function, and it will return dom message 
+
+```tsx
+import ExampleSvg from 'example.svg'
+const svgChildren = ExampleSvg()
+```
+
+And then, you can edit it with React function.
+
+```tsx
+React.cloneElement(svgChildren, {...props}, null)
+```
+
+In this way, you can edit the dom of svg. 
