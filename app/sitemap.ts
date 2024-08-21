@@ -12,7 +12,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	const posts = await getAllPosts()
 	posts.forEach((post) => {
 		links.push({
-			url: `https://yourwebsite.com/${post.slug}`,
+			url: `https://overreacted-kyle.vercel.app/${post.slug}`,
 			lastModified: new Date(post.date),
 		})
 	})
