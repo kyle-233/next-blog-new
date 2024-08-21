@@ -1,0 +1,247 @@
+---
+title: 'SEO for Next.JS'
+date: '2024-8-21'
+description: 'How many ways for Next.JS to improve search engine optimization'
+authors:
+  - Kyle
+---
+
+## Sitemap
+A sitemap is ususally an XML document that includes a comprehensive list of links to a website.
+
+Create a `sitemap.xml` file in `app` directory.
+
+```ts
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://acme.com</loc>
+    <lastmod>2023-04-06T15:02:24.021Z</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>1</priority>
+  </url>
+  <url>
+    <loc>https://acme.com/about</loc>
+    <lastmod>2023-04-06T15:02:24.021Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://acme.com/blog</loc>
+    <lastmod>2023-04-06T15:02:24.021Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+</urlset>
+```
+
+Use `sitemap.(js|ts)` file to generate a sitemap by exporting a default function that returns an array of URLs
+
+```ts
+import type { MetadataRoute } from 'next'
+ 
+export default function sitemap(): MetadataRoute.Sitemap {
+  return [
+    {
+      url: 'https://acme.com',
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 1,
+    },
+    {
+      url: 'https://acme.com/about',
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: 'https://acme.com/blog',
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.5,
+    },
+  ]
+}
+```
+
+split sitemap file to different file
+```ts
+// sitemap.xml
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>https://acme.com/sitemap1.xml</loc>
+    <lastmod>2023-04-06T15:02:24.021Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://acme.com/sitemap2.xml</loc>
+    <lastmod>2023-04-06T15:02:24.021Z</lastmod>
+  </sitemap>
+</sitemapindex>
+```
+
+## Robots
+
+You can specify the path of the sitemap file in the sitemap field of the robots file to facilitate search engines to retrieve the sitemap file.
+
+```ts
+import type { MetadataRoute } from 'next'
+ 
+export default function robots(): MetadataRoute.Robots {
+  return {
+    rules: {
+      userAgent: '*',
+      allow: '/',
+      disallow: '/private/',
+    },
+    sitemap: 'https://acme.com/sitemap.xml',
+  }
+}
+```
+
+## RSS Feed for blog/article
+
+RSS feeds are similarly a list of links to a website, but are more focused on functionally acting as a feed of updates from your site, commonly used for blogs or news articles.
+
+Install `rss` or `feed` package.
+
+`rss`:
+```base
+# install node-rss
+npm install rss
+# install the types, if use typescript
+npm install @types/rss -D
+```
+`feed`:
+```base
+# install
+npm install feed
+```
+
+Create `rss.xml` directory with `routes.ts` file in `app` directory.
+```ts
+export async function GET() {
+	const posts = await getAllPosts()
+	const feed = generateFeed(posts, metadata)
+	return new Response(feed.rss2(), {
+		headers: { 'Content-Type': 'application/xml' },
+	})
+}
+```
+
+`atom.xml/routes.ts`
+```ts
+export async function GET() {
+	const posts = await getAllPosts()
+	const feed = generateFeed(posts, metadata)
+	return new Response(feed.atom1(), {
+		headers: {
+			'content-type': 'application/xml',
+		},
+	})
+}
+```
+
+Implete `generateFeed()` with `rss` or `feed` in an utils file or any files.
+
+```ts
+export const generateFeed = (posts: PostProps[], metadata: Metadata) => {
+	const site_url = 'https://xxx.website/' // you website
+	const feedOptions: FeedOptions = {
+		title: siteConfig.title, // you website title
+		description: metadata.description as string, // website description
+		id: site_url, 
+		link: site_url,
+		language: 'en', // optional, used only in RSS 2.0, possible values: http://www.w3.org/TR/REC-html40/struct/dirlang.html#langcodes
+		image: 'https://xxx.website/xxx.png',
+		favicon: `${site_url}/favicon.ico`,
+		feedLinks: { atom: `${site_url}atom.xml`, rss: `${site_url}rss.xml` },
+		copyright: 'All rights reserved 2024, Kyle Lou',
+		generator: 'Feed for Node.js', // optional, default = 'Feed for Node.js'
+		author: {
+			name: 'author name',
+			email: 'author s email',
+			link: site_url,
+		},
+	}
+	const feed = new Feed(feedOptions) // use feed
+	for (const post of posts) { // add yout other post/article
+		feed.addItem({
+			date: new Date(post.date),
+			description: post.description,
+			id: `${site_url}${post.slug}/`,
+			link: `${site_url}${post.slug}/`,
+			title: post.title,
+		})
+	}
+
+	return feed
+}
+```
+
+## metadata
+
+You can do that by adding an alternate link tag when defining your site metadata, such as in your layout.tsx (or layout.jsx) file:
+
+```ts
+export const metadata: Metadata = {
+  title: "Your Website",
+  description: "A cool website that everyone should check out!",
+  alternates: {
+    types: {
+        'application/atom+xml': 'https://yourwebsite.com/atom.xml',
+        'application/rss+xml': 'https://yourwebsite.com/feed.xml',
+    },
+  }
+}
+```
+
+You can also validate your feed using the [W3C Feed Validation Service](https://validator.w3.org/feed/#validate_by_input)!
+
+Metadata example:
+```ts
+export const metadata: Metadata = {
+  metadataBase: new URL(env.NEXT_PUBLIC_APP_URL), // website link
+  title: { // title
+    default: siteConfig.name,
+    template: `%s - ${siteConfig.name}`,
+  },
+  description: siteConfig.description,
+  keywords: [
+    "nextjs",
+    "react",
+    "react server components",
+  ], // keywords
+  authors: [
+    {
+      name: "xxx",
+      url: "https://www.xxx.com",
+    },
+  ],
+  creator: "xxx",
+  openGraph: { // fackbook og
+    type: "website",
+    locale: "en_US",
+    url: siteConfig.url,
+    title: siteConfig.name,
+    description: siteConfig.description,
+    siteName: siteConfig.name,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.name,
+    description: siteConfig.description,
+    images: [`${siteConfig.url}/og.jpg`],
+    creator: "xxx",
+  },
+  icons: {
+    icon: "/icon.png",
+  },
+  manifest: absoluteUrl("/site.webmanifest"), // site.webmanifest
+}
+```
+
+## References
+
+- [Next.js sitemap Document](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap)
+- [Next.js robots Document](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots)
+- [Feed Document](https://github.com/jpmonette/feed)
+- [How to Add a Sitemap & RSS Feed in Next.js App Router](https://spacejelly.dev/posts/how-to-add-a-sitemap-rss-feed-in-next-js-app-router)
