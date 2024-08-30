@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils'
 import { fontMono } from '@/lib/fonts'
 import { siteConfig } from '@/config/site'
 import { Analytics } from '@/components/analytics'
+import { ViewTransitions } from 'next-view-transitions'
 
 export const metadata: Metadata = {
 	title: {
@@ -53,16 +54,18 @@ export default function RootLayout({
 	children: React.ReactNode
 }>) {
 	return (
-		<html lang="en">
-			<body
-				className={cn(
-					'min-h-screen bg-background text-text',
-					fontMono.className
-				)}
-			>
-				{children}
-				<Analytics />
-			</body>
-		</html>
+		<ViewTransitions>
+			<html lang="en">
+				<body
+					className={cn(
+						'min-h-screen bg-background text-text',
+						fontMono.className
+					)}
+				>
+					{children}
+					<Analytics />
+				</body>
+			</html>
+		</ViewTransitions>
 	)
 }

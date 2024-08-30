@@ -27,7 +27,7 @@ export const LinkTitle = ({ post }: LinkTitleProps) => {
 		<h2
 			className={cn(
 				fontSans.className,
-				'text-[28px] font-black text-[--lightLink] dark:text-[--darkLink]'
+				'text-[28px] font-black text-[--lightLink] dark:text-[--darkLink] title'
 			)}
 			style={
 				{

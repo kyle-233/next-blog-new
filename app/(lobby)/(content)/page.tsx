@@ -1,8 +1,7 @@
 import { LinkTitle } from '@/components/link-title'
 import { getAllPosts } from '@/lib/reader'
 import { formatDate } from '@/lib/utils'
-
-import Link from 'next/link'
+import { Link } from 'next-view-transitions'
 
 const BlogPage = () => {
 	const allPosts = getAllPosts()
