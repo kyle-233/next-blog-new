@@ -5,7 +5,12 @@
 /* .title {
 	view-transition-name: figure-caption;
 	width: fit-content;
-} */
+}
+
+*/
+ @view-transition {
+ 	navigation: auto;
+ }
 :root {
 	--text: 34, 34, 34, 1;
 	--title: #222;
