@@ -1,0 +1,215 @@
+---
+title: 'A blog - Initialize'
+date: '2025-3-31'
+description: 'Initialize the project using Eslint、Prittier、Husky、Commitlint、lint-staged'
+authors:
+    - Kyle Lou
+---
+
+## 准备
+
+-   code
+
+## 一、协同开发
+
+### Node.js 版本
+
+在根目录创建`.nvmrc`文件，锁定 `Node.js` 版本
+
+```js
+v20.18.0
+```
+
+### Eslint
+
+-   参考[Next.js Eslint](https://nextjs.org/docs/app/api-reference/config/eslint)配置 Eslint
+-   在根目录创建`.eslintignore`文件，忽略配置的文件，不进行校验
+
+```js
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+```
+
+-   禁止打包校验
+    在`next.config.ts`中添加以下代码
+
+```js {4-8}
+import type { NextConfig } from 'next'
+
+const nextConfig: NextConfig = {
+	eslint: {
+		// Warning: This allows production builds to successfully complete even if
+		// your project has ESLint errors.
+		ignoreDuringBuilds: true,
+	},
+}
+
+export default nextConfig
+```
+
+### Prettier
+
+下载下面的依赖
+
+```command
+npm install --save-dev --save-exact prettier
+npm install --save-dev eslint-config-prettier
+```
+
+在`eslint.config.mjs`中加上`prettier`
+
+```js {2}
+const eslintConfig = [
+	...compat.extends('next/core-web-vitals', 'next/typescript', 'pretter'),
+]
+```
+
+在根目录创建`.prettierignore`文件，忽略配置的文件，不进行校验，配置的内容和`.eslintignore`一致
+
+### .vscode
+
+-   添加`settings.json`
+
+```json
+{
+	"editor.formatOnSave": true,
+	"editor.formatOnSaveMode": "file",
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"[typescript]": {
+		"editor.formatOnSave": true,
+		"editor.formatOnSaveMode": "file",
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	}
+}
+```
+
+-   添加`extensions.json`
+
+```json
+{
+	"recommendations": [
+		"dbaeumer.vscode-eslint",
+		"bradlc.vscode-tailwindcss",
+		"esbenp.prettier-vscode"
+	]
+}
+```
+
+### lint-stage
+
+-   下载
+
+```command
+npm install --save-dev lint-staged # requires further setup
+```
+
+参考[Running lint on staged files](https://nextjs.org/docs/app/api-reference/config/eslint#running-lint-on-staged-files)和[Lint-staged Document](https://github.com/lint-staged/lint-staged)
+配置`.lintstagedrc.js`
+
+```js
+import path from 'path'
+
+const buildEslintCommand = (filenames) =>
+	`next lint --fix --file ${filenames
+		.map((f) => path.relative(process.cwd(), f))
+		.join(' --file ')}`
+
+module.exports = {
+	'*.{js,jsx,ts,tsx}': [buildEslintCommand],
+	'*.{js,jsx,ts,tsx,md,html,css}': 'prettier --write',
+}
+```
+
+### Husky
+
+-   下载
+
+```command
+npm install --save-dev husky
+```
+
+-   初始化
+
+```command
+npx husky init
+```
+
+-   写入命令
+
+```command
+echo "npx lint-staged" > .husky/pre-commit
+```
+
+> 注意，文件的格式要为`UTF-8`
+
+参考[Husky Document](https://typicode.github.io/husky/)
+
+### Commitlint
+
+-   下载
+
+```command
+npm install --save-dev @commitlint/{cli,config-conventional}
+```
+
+-   配置文件
+
+```command
+echo "export default config = { extends: ['@commitlint/config-conventional'] }" > commitlint.config.js
+```
+
+-   添加`Husky`-`commit-msg` Hook
+
+```command
+# Add commit message linting to commit-msg hook
+echo "npx --no -- commitlint --config commitlint.config.js --edit \$1" > .husky/commit-msg
+# Windows users should use ` to escape dollar signs
+echo "npx --no commitlint --config commitlint.config.js --edit `$1" > .husky/commit-msg
+```
+
+参考[Commitlint Document](https://commitlint.js.org/guides/getting-started.html)
+
+## References
+
+-   [Next.js Eslint](https://nextjs.org/docs/app/api-reference/config/eslint)
+-   [Running lint on staged files](https://nextjs.org/docs/app/api-reference/config/eslint#running-lint-on-staged-files)
+-   [Lint-staged Document](https://github.com/lint-staged/lint-staged)
+-   [Husky Document](https://typicode.github.io/husky/)
+-   [Commitlint Document](https://commitlint.js.org/guides/getting-started.html)
