@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils'
 import remarkToc from 'remark-toc'
 import '@/styles/mdx.css'
 import { Counter } from '@/content/blogs/the-two-reacts/components'
+import { MdxCode } from './mdx-code'
 
 interface MdxProps {
 	content: string
@@ -20,6 +21,7 @@ export const Mdx = async ({ content = '', postComponents = {} }: MdxProps) => {
 		...postComponents,
 		Counter: Counter,
 		Image: MdxImage,
+		pre: MdxCode,
 		table: ({
 			className,
 			...props
@@ -71,9 +73,8 @@ export const Mdx = async ({ content = '', postComponents = {} }: MdxProps) => {
 
 	const options = {
 		useDynamicImport: true,
+		parseFrontmatter: true,
 		mdxOptions: {
-			parseFrontmatter: true,
-			useDynamicImport: true,
 			remarkPlugins: [
 				remarkGfm,
 				// [remarkToc, { maxDepth: 4 }],

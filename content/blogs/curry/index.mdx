@@ -3,24 +3,24 @@ title: 'Curry'
 date: '2024-8-13'
 description: 'Implement curry()'
 authors:
-  - Kyle
+    - Kyle
 ---
 
 ## curry()
 
 implement `curry()`
 
-``` js
+```js
 const curry = (fn) => {
-  return function curried(...args) {
-    if (args.length >= fn.length) {
-      fn(...args)
-    } else {
-      return (...newArgs) => {
-        return curried(...args, ...newArgs)
-      }
-    }
-  }
+	return function curried(...args) {
+		if (args.length >= fn.length) {
+			fn(...args)
+		} else {
+			return (...newArgs) => {
+				return curried(...args, ...newArgs)
+			}
+		}
+	}
 }
 ```
 
@@ -30,15 +30,20 @@ implement `curry()` which also supports placeholder.
 
 ```js
 const curry = (fn) => {
-  return function curried(...args) {
-    if (args.length >= fn.length && !args.includes(curry.placeholder)) {
-      fn(...args)
-    } else {
-      return (...newArgs) => {
-        return curried(...(args.map(arg => arg === curry.placeholder ? newArgs.shift() : arg)), ...newArgs)
-      }
-    }
-  }
+	return function curried(...args) {
+		if (args.length >= fn.length && !args.includes(curry.placeholder)) {
+			fn(...args)
+		} else {
+			return (...newArgs) => {
+				return curried(
+					...args.map((arg) =>
+						arg === curry.placeholder ? newArgs.shift() : arg
+					),
+					...newArgs
+				)
+			}
+		}
+	}
 }
 curry.placeholder = Symbol()
 ```
