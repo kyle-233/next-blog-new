@@ -23,49 +23,6 @@ v20.18.0
 ### Eslint
 
 -   参考[Next.js Eslint](https://nextjs.org/docs/app/api-reference/config/eslint)配置 Eslint
--   在根目录创建`.eslintignore`文件，忽略配置的文件，不进行校验
-
-```js
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
-.env*
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-```
 
 -   禁止打包校验
     在`next.config.ts`中添加以下代码
@@ -97,7 +54,7 @@ npm install --save-dev eslint-config-prettier
 
 ```js {2}
 const eslintConfig = [
-	...compat.extends('next/core-web-vitals', 'next/typescript', 'pretter'),
+	...compat.extends('next/core-web-vitals', 'next/typescript', 'prettier'),
 ]
 ```
 
@@ -192,7 +149,7 @@ npm install --save-dev @commitlint/{cli,config-conventional}
 -   配置文件
 
 ```command
-echo "export default config = { extends: ['@commitlint/config-conventional'] }" > commitlint.config.js
+echo "export default { extends: ['@commitlint/config-conventional'] }" > commitlint.config.js
 ```
 
 -   添加`Husky`-`commit-msg` Hook
