@@ -1,0 +1,93 @@
+---
+title: 'A blog - Markdown'
+date: '2025-3-31'
+description: 'How to set up a new Next.js project'
+authors:
+    - Kyle Lou
+---
+
+## 准备
+
+-   File
+-   code
+
+## 开始
+
+-   文章
+
+在`app`目录下创建`content/blogs`用于存放文章
+
+````markdown
+---
+title: 'A blog - Install'
+date: '2025-3-30'
+description: 'How to set up a new Next.js project'
+authors:
+    - Kyle Lou
+---
+
+## 准备
+
+-   Node.js ( >=18.18 version )
+-   npm
+
+## 开始
+
+To create a project, run:
+
+```command
+npx create-next-app@latest
+```
+
+## References
+
+-   [Next.js Installation](https://nextjs.org/docs/app/getting-started/installation)
+````
+
+-   Markdown 语法
+    > TODO 学习语法
+
+## 工具
+
+在`app`目录下创建`lib/reader.ts`
+
+```js
+import { PostProps } from '@/types'
+import { readFileSync, readdirSync } from 'fs'
+import { join } from 'path'
+import matter from 'gray-matter'
+import readingTime from 'reading-time'
+
+const postsDirectory = join(process.cwd(), 'content', 'blogs')
+
+export const getPostSlugs = () => {
+	return readdirSync(postsDirectory)
+}
+
+export const getPostBySlug = (slug: string): PostProps => {
+	const realSlug = slug.replace(/\.mdx$/, '')
+
+	const fullPath = join(postsDirectory, `${realSlug}/index.mdx`)
+
+	const fileContents = readFileSync(fullPath)
+	const { data, content } = matter(fileContents)
+	const readTime = readingTime(content)
+	return {
+		...data,
+		date: data.date,
+		slug: realSlug,
+		readingTime: readTime,
+		content,
+	} as PostProps
+}
+
+export const getAllPosts = (): PostProps[] => {
+	const slugs = getPostSlugs()
+	const posts = slugs.map((slug) => getPostBySlug(slug))
+	return posts.sort((a, b) => b.date.localeCompare(a.date))
+}
+```
+
+## References
+
+-   [Next.js Installation](https://nextjs.org/docs/app/getting-started/installation)
