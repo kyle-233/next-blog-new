@@ -1,0 +1,47 @@
+---
+title: 'A blog - list'
+date: '2025-4-1'
+description: 'Display blog list'
+authors:
+    - Kyle Lou
+---
+
+## 准备
+
+-   code
+
+## 首页
+
+-   获取目录
+
+```js
+const BlogPage = () => {
+	import { getAllPosts } from '@/lib/reader'
+	const allPosts = getAllPosts()
+	return (
+        ...
+    )
+}
+```
+
+-   渲染目录
+
+```js
+const BlogPage = () => {
+	import { getAllPosts } from '@/lib/reader'
+	const allPosts = getAllPosts()
+	return <>{ allPosts.map(post => ( ... )) }</>
+}
+```
+
+<PostList />
+
+> 注意：这里的样式没有给出，可以按照自己想要的设计
+
+## Tailwind CSS
+
+样式可以使用[`TailwindCSS`](https://tailwindcss.com/docs/installation/framework-guides/nextjs)
+
+## References
+
+-   [TailwindCSS for Next.js](https://tailwindcss.com/docs/installation/framework-guides/nextjs)
