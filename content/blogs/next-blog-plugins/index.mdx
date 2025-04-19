@@ -1,0 +1,56 @@
+---
+title: 'A blog - Plugins'
+date: '2025-4-19'
+description: 'Add mdx plugins'
+authors:
+    - Kyle Lou
+---
+
+## 准备
+
+-   Node.js ( >=18.18 version )
+-   npm
+
+## 开始
+
+### `rehype-pretty-code`
+
+用于美化代码
+
+```shell
+npm install rehype-pretty-code shiki
+```
+
+```tsx
+import rehypePrettyCode from 'rehype-pretty-code'
+
+const options: MDXRemoteProps['options'] = {
+	parseFrontmatter: true,
+	mdxOptions: {
+		rehypePlugins: [
+			[
+				rehypePrettyCode,
+				{
+					keepBackground: true,
+					theme: 'material-theme-palenight',
+				},
+			],
+		],
+	},
+}
+```
+
+-   标题
+
+```css
+.markdown figcaption[data-rehype-pretty-code-title] {
+	@apply -mx-4 px-4 text-sm text-gray-200 py-1;
+	border-top-right-radius: var(--radius-top);
+	border-top-left-radius: var(--radius-top);
+	background-color: var(--codeTitle-bg);
+}
+```
+
+## References
+
+-   [Rehype Pretty Code](https://rehype-pretty.pages.dev/)
