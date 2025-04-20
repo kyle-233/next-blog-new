@@ -1,0 +1,62 @@
+---
+title: 'A blog - Fix'
+date: '2025-4-21'
+description: 'Fix bug'
+authors:
+    - Kyle Lou
+---
+
+## 准备
+
+-   Node.js ( >=18.18 version )
+-   npm
+
+## 开始
+
+### 表格
+
+```shell
+npm i remark-gfm
+```
+
+```tsx title="mdx-component.tsx" {5}
+import remarkGfm from 'remark-gfm'
+const options = {
+	parseFrontmatter: true,
+	mdxOptions: {
+		remarkPlugins: [remarkGfm],
+		rehypePlugins: [
+			rehypeKatex,
+			[
+				rehypePrettyCode,
+				{
+					theme: 'material-theme-palenight',
+				},
+			],
+		],
+	},
+}
+```
+
+### `Link`
+
+```css title="mdx.css"
+.markdown a {
+	@apply border-b-[1px] border-(--link) text-(--link);
+}
+```
+
+### `tailwind.config.ts`
+
+删除`tailwind.config.ts`文件
+
+### `code title`
+
+```css
+.markdown figcaption[data-rehype-pretty-code-title] {
+	@apply -mx-4 px-4 text-xs text-gray-200 py-1 font-mono;
+	border-top-right-radius: var(--radius-top);
+	border-top-left-radius: var(--radius-top);
+	background-color: var(--codeTitle-bg);
+}
+```
