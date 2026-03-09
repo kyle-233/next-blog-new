@@ -17,7 +17,7 @@ export const LinkTitle = ({ post }: LinkTitleProps) => {
 	let darkRange = darkStart.range(darkEnd)
 	let today = new Date()
 	let timeSinceFirstPost = (
-		today.valueOf() - new Date(2018, 10, 30).valueOf()
+		today.valueOf() - new Date(2023, 7, 4).valueOf()
 	).valueOf()
 	let timeSinceThisPost = (
 		today.valueOf() - new Date(post.date).valueOf()

@@ -1,0 +1,26 @@
+---
+title: 'new关键字'
+date: '2026-3-1'
+description: 'new'
+authors:
+    - Kyle
+---
+
+## new 命令的原理
+
+- 创建一个空对象，作为将要返回的对象实例
+- 将这个空对象的原型，指向构造函数的 `prototype` 属性
+- 将这个空对象赋值给函数内部的 `this` 关键字
+- 执行构造函数的代码
+- 返回对象 (如果构造函数返回对象，则直接返回，否则返回创建的新对象)
+
+```js
+function _new(constructor, params) {
+  // 创建空对象，指向构造函数的 `prototype` 属性
+  const context = Object.create(constructor.prototype)
+  // 绑定 `this` , 执行构造函数
+  const result = constructor.apply(context, params)
+  // 返回对象
+  return (typeof result === 'object' && result !== null) ? result : context 
+}
+```

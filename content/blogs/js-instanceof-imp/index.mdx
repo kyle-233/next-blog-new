@@ -1,0 +1,20 @@
+---
+title: 'JAVASCRIPT-instanceof 实现'
+date: '2026-3-9'
+description: 'instanceof 实现'
+authors:
+    - Kyle
+---
+
+``` js
+function cInstanceof(variable, Fn) {
+  let proto = Object.getPrototypeOf(variable)
+
+  while(proto) {
+    if (proto === Fn.prototype) return true
+    proto = Object.getPrototypeOf(proto)
+  }
+
+  return false
+}
+```

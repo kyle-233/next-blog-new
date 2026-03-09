@@ -1,0 +1,106 @@
+---
+title: 'JAVASCRIPT-类型判断'
+date: '2026-3-9'
+description: '类型判断'
+authors:
+    - Kyle
+---
+
+## 一、`typeof`
+- 字符串 - `'string'`
+- 数值 - `'number'`
+- 布尔值 - `'boolean'`
+- undefined - `'undefined'`
+- null - `'object'`
+- 基本对象 - `'object'`
+- 数组 - `'object'`
+- 函数 - `'function'`
+- 大数字 - `'bigint'`
+- Symbol - `'symbol'`
+- 包装类型 - `'object'`
+```js
+typeof("ABC") // 'string'
+typeof(123) // 'number'
+typeof(true) // 'boolean'
+typeof(undefined) // 'undefined'
+typeof(null) // 'object'
+typeof({}) // 'object'
+typeof([]) // 'object'
+typeof(function(){}) // 'function'
+typeof(12n) // 'bigint'
+typeof(Symbol()) // 'symbol'
+typeof(new String('')) // 'object'
+```
+
+## 二、`instanceof`
+只可以判断对象类型（有原型的类型）
+
+```js
+'' instanceof String // false
+
+let a = {}
+a instanceof Object // true
+{} instanceof Object // Uncaught SyntaxError: Unexpected token 'instanceof'
+
+let b = Object.create(null)
+b instanceof Object // false
+
+let c = Object.create({})
+c instanceof Object // true
+```
+
+## 三、`toString`
+```js
+// 用法
+Object.prototype.toString.call([type]) // [object Type]
+```
+
+```js
+Object.prototype.toString.call(123) // [object Number]
+Object.prototype.toString.call("") // [object String]
+Object.prototype.toString.call(true) // [object Boolean]
+Object.prototype.toString.call(undefined) // [object Undefined]
+Object.prototype.toString.call(null) // [object Null]
+Object.prototype.toString.call({}) // [object Object]
+Object.prototype.toString.call([]) // [object Array]
+Object.prototype.toString.call(function(){}) // [object Function]
+Object.prototype.toString.call(12n) // [object BigInt]
+Object.prototype.toString.call(Symbol()) // [object Symbol]
+```
+
+```js
+// 取出对应类型
+Object.prototype.toString.call([type]).slice(8, -1).toLocaleLowerCase() // type
+```
+
+## 四、`constructor`
+不可以判断`null`, `undefined`，`constructor`可以被修改
+
+```js
+[].constructor === Array // true
+''.constructor === String // true
+12n.constructor === BigInt // true
+```
+
+## 五、`isPrototypeof`
+用于判断一个对象是否是另一个对象的原型。
+```js
+const obj = { name: "云牧", age: 18 }
+const arr = [1, 2, 3]
+
+const proto1 = Object.getPrototypeOf(obj)
+console.log(proto1.isPrototypeOf(obj)) // true
+
+console.log(Object.isPrototypeOf({})) // false
+console.log(Object.prototype.isPrototypeOf({})) // true  期望左操作数是一个原型，{} 原型链能找到 Object.prototype
+
+console.log(Object.getPrototypeOf(obj) === Object.prototype) // true
+console.log(Object.getPrototypeOf(arr) === Array.prototype) // true
+```
+
+## 六、`Array.isArray`
+用于判断变量是否是数组
+```js
+Array.isArray([]) // true
+Array.isArray(123) // false
+```
