@@ -1,0 +1,31 @@
+---
+title: 'JAVASCRIPT-Object.is'
+date: '2026-3-9'
+description: 'Object.is'
+authors:
+    - Kyle
+---
+
+
+## 一、`Object.is`
+
+```js
+Object.is = function(x, y) {
+  if (x === y) {
+    // 相等的情况下，只需判断 +0、-0
+    // 不等于 0 就返回 true
+    // 等于 0 的情况下，就判断 +0、-0 （1 / +0 === Infinity 和 1 / -0 === -Infinity）
+    return x !== 0 || 1 / x === 1 / y
+  }
+  // x !== y 情况下，只需判断是否为NaN
+  // x、y 同时为 NaN 就返回 true
+  return x !== x && y !== y
+}
+```
+
+## 二、严格相等
+- `===` 时不会转换数据类型
+
+## 三、区别
+- NaN 在 `===` 时，不相等，`is` 时，相等
+- +0、-0 在 `===` 时，相等，`is`时，不相等
